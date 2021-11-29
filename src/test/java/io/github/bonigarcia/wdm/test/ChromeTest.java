@@ -17,10 +17,7 @@
 
 package io.github.bonigarcia.wdm.test;
 
-import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
-import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
-import static org.openqa.selenium.support.ui.ExpectedConditions.textToBePresentInElementLocated;
-
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -30,7 +27,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 
 /**
  * Test with Chrome.
@@ -60,19 +58,56 @@ public class ChromeTest {
     }
 
     @Test
-    public void test() {
-        // Your test code here. For example:
+    public void shouldRegister() throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, 30);
+
+        driver.get("https://en.wikipedia.org/wiki/Main_Page");
+
+        By createAccountLink = By.id("pt-createaccount");
+        wait.until(elementToBeClickable(createAccountLink));
+        driver.findElement(createAccountLink).click();
+
+        By usernameInput = By.id("wpName2");
+        wait.until(presenceOfElementLocated(usernameInput));
+        driver.findElement(usernameInput).sendKeys("CarlosRuanPajaresGomes");
+
+        By passwordInput = By.id("wpPassword2");
+        wait.until(presenceOfElementLocated(passwordInput));
+        driver.findElement(passwordInput).sendKeys("Ruan1234@");
+
+        By confirmPasswordInput = By.id("wpRetype");
+        wait.until(presenceOfElementLocated(confirmPasswordInput));
+        driver.findElement(confirmPasswordInput).sendKeys("Ruan1234@");
+
+        By emailInput = By.id("wpEmail");
+        wait.until(presenceOfElementLocated(emailInput));
+        driver.findElement(emailInput).sendKeys("carlos.ruan@acad.pucrs.br");
+
+        By captchaInput = By.id("mw-input-captchaWord");
+        wait.until(presenceOfElementLocated(captchaInput));
+        driver.findElement(captchaInput).sendKeys("qualquercoisacaptcha");
+
+        By submitButton = By.id("wpCreateaccount");
+        wait.until(elementToBeClickable(submitButton));
+        driver.findElement(submitButton).click();
+
+        Thread.sleep(6000);
+    }
+
+    @Test
+    public void shouldDownloadPDF() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, 30);
         driver.get("https://en.wikipedia.org/wiki/Main_Page");
-        By searchInput = By.id("searchInput");
-        wait.until(presenceOfElementLocated(searchInput));
-        driver.findElement(searchInput).sendKeys("Software");
-        By searchButton = By.id("searchButton");
-        wait.until(elementToBeClickable(searchButton));
-        driver.findElement(searchButton).click();
 
-        wait.until(textToBePresentInElementLocated(By.tagName("body"),
-                "Computer software"));
+        By downloadPdfLink = By.id("coll-download-as-rl");
+        wait.until(elementToBeClickable(downloadPdfLink));
+        driver.findElement(downloadPdfLink).click();
+
+        By downloadPdfButton = By.className("oo-ui-labelElement-label");
+        wait.until(elementToBeClickable(downloadPdfButton));
+        driver.findElement(downloadPdfButton).click();
+
+        Thread.sleep(6000);
     }
 
 }
